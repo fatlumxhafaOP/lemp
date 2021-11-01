@@ -1,0 +1,2 @@
+[lemp]
+localhost1 ansible_connection=local

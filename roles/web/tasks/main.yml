@@ -1,0 +1,36 @@
+---
+# tasks file for web
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: latest
+
+- name: Install PHP-FPM
+  apt:
+    name: ['php7.4','php7.4-fpm','php7.4-common','php7.4-cli','php7.4-curl']
+    state: latest
+
+- name: Configure php.ini
+  blockinfile:
+    dest: /etc/php/{{ php_version }}/fpm/php.ini
+    block: |
+      date.time = Europe/Tirane
+      cgi-fix_pathinfo = 0
+    backup: yes
+  notify: restart php-fpm
+
+- name: Create Nginx virtual host
+  template:
+    src: vhost.j2
+    dest: /etc/nginx/sites-enabled/vhost-{{ domain_name }}
+  notify: restart nginx
+
+- name: Create web-root directory
+  file:
+    path: /var/www/{{ domain_name }}
+    state: directory
+
+- name: Upload index.html and info.php files
+  template:
+    src: index.php.j2
+    dest: /var/www/{{ domain_name }}/index.php

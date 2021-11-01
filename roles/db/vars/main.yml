@@ -1,0 +1,5 @@
+---
+# vars file for db
+db_name: ansible
+db_user: ansible
+db_pass: 'ansible123'

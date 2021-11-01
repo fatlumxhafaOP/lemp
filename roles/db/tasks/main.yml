@@ -1,0 +1,24 @@
+---
+# tasks file for db
+- name: Install MySQL
+  apt:
+    name: ['mysql-server-5.7','mysql-client-5.7']
+    state: latest
+  notify: restart mysql
+
+- name: Create database
+  become: yes
+  mysql_db:
+    login_user: 'ansible'
+    login_password: 'ansible123'
+    name: '{{ db_name }}'
+    state: present
+
+- name: Create user for the database
+  mysql_user:
+    login_user: 'ansible'
+    login_password: 'ansible123'
+    name: '{{ db_user }}'
+    password: '{{ db_pass }}'
+    priv: '{{ db_name }}.*:ALL'
+    state: present
